@@ -473,8 +473,8 @@ function getData(){
     <table class="table">
     <thead>
     <tr>
-      <th scope="col">Vacaciones</th>
-      <th scope="col">Días</th>
+      <th scope="col">Descripción</th>
+      <th scope="col">Suma Totales</th>
     </tr>
     </thead>
     <tbody>
