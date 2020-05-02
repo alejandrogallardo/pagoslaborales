@@ -470,8 +470,21 @@ function getData(){
     </div>
     <small>Total indemnizacion:</small>
     <div class="border resetText">
-    <small><p>Un sueldo por cada ano + Bono 14 + Aguinaldo + Vacaciones</p></small>
-    <p class="text-right">*Total Indemnización: <span class="badge badge-success">${ formatter.format(totalIndem) }</span></p>
+    <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Vacaciones</th>
+      <th scope="col">Días</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>*Total Indemnización:</td>
+      <td><span class="badge badge-success">${ formatter.format(totalIndem) }</span></td>
+    </tr>
+  </tbody>
+    </table>
+
     </div>
     <small>*El calculo es aproximado y pueden haber otros factores que hagan que varie</small>
     `;
