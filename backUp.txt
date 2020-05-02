@@ -1,0 +1,428 @@
+BackUp 29/04/2020
+
+
+let meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+let days: number = 31;
+let aY = new Date();
+let actualYear = aY.getFullYear();
+let iniYear: number = 1950; 
+
+// Ingreso
+let dayI = document.getElementById('Iday');
+let monthI = document.getElementById('Imonth');
+let yearI = document.getElementById('Iyear');
+// Salida
+let dayF = document.getElementById('Fday');
+let monthF = document.getElementById('Fmonth');
+let yearF = document.getElementById('Fyear');
+
+/**
+ * Ciclos Ingreso
+ */
+for (let i = 0; i < days; i++) {
+
+    let diaOpt = document.createElement('option')
+    diaOpt.setAttribute('value', `${i+1}`)
+    diaOpt.innerHTML = `${i+1}`
+    dayI.appendChild(diaOpt)
+
+}
+for (let i = 0; i < meses.length; i++) {
+
+    let mesOpt = document.createElement('option')
+    mesOpt.setAttribute('value', `${i+1}`)
+    mesOpt.innerHTML = meses[i]
+    monthI.appendChild(mesOpt)
+
+}
+for (let i = iniYear; i <= actualYear; i++) {
+   
+    let yearOpt = document.createElement('option')
+    yearOpt.setAttribute('value', `${i+1}`)
+    yearOpt.innerHTML = `${i+1}`
+    yearI.appendChild(yearOpt)
+
+}
+/**
+ * Ciclos Salida
+ */
+for (let i = 0; i < days; i++) {
+
+    let diaOpt = document.createElement('option')
+    diaOpt.setAttribute('value', `${i+1}`)
+    diaOpt.innerHTML = `${i+1}`
+    dayF.appendChild(diaOpt)
+
+}
+for (let i = 0; i < meses.length; i++) {
+
+    let mesOpt = document.createElement('option')
+    mesOpt.setAttribute('value', `${i+1}`)
+    mesOpt.innerHTML = meses[i]
+    monthF.appendChild(mesOpt)
+
+}
+for (let i = iniYear; i <= actualYear; i++) {
+   
+    let yearOpt = document.createElement('option')
+    yearOpt.setAttribute('value', `${i+1}`)
+    yearOpt.innerHTML = `${i+1}`
+    yearF.appendChild(yearOpt)
+
+}
+
+
+/**
+ * Calculo de fechas
+ */
+function calcular(){
+
+    let sueldo: number;
+    let aguinaldo: number;
+    let bono14: number;
+    let TYears: number;
+    let InYears: number;
+    let totalIndem: number;
+    let TMonth: number;
+    let TMonthV: number;
+    let TDays: number;
+    let vacaciones: number;
+
+    aguinaldo = 100
+    bono14 = 3500.00
+    const factorV = 15 / 365;
+    
+   // Datos Iniciales
+    let dayI = (<HTMLInputElement>document.getElementById('Iday')).value;
+    let monthI = (<HTMLInputElement>document.getElementById('Imonth')).value;
+    let yearI = (<HTMLInputElement>document.getElementById('Iyear')).value;
+    
+    // Datos Finales
+    let dayF = (<HTMLInputElement>document.getElementById('Fday')).value;
+    let monthF = (<HTMLInputElement>document.getElementById('Fmonth')).value;
+    let yearF = (<HTMLInputElement>document.getElementById('Fyear')).value;
+   
+
+    let TempY = parseInt(yearF) - parseInt(yearI)
+
+
+    /**
+     * Calculo de años trabajados
+     */
+    if( parseInt(monthF) < parseInt(monthI) ){
+        console.log('Mes menor');
+        TYears = parseInt(yearF) - parseInt(yearI)
+        TYears -= 1
+        let TempMonth = 12 - parseInt(monthI)
+        TMonth = parseInt(monthF) + TempMonth
+
+        if( parseInt(dayF) > 25){
+            TMonth += 1
+            console.log('Mes mayor a 25 dias', TMonth);
+        }
+        if( TMonth === 12){
+            TYears += 1
+            console.log(TMonth);
+            console.log('Anos al ser ifual a 12: ', TYears);
+            TMonth = 0
+           
+        }
+        
+        TDays = parseInt(dayF)
+        
+    }
+    else{
+        // console.log('Else al no ser menor');
+        TYears = parseInt(yearF) - parseInt(yearI)
+        TMonth = parseInt(monthF) - parseInt(monthI)
+        if( TMonth === 0 && parseInt(dayF) > 25){
+            TMonth += 1
+        }
+        if(parseInt(dayF) > 25){
+            TMonth += 1
+        }
+
+        
+        TDays = parseInt(dayF)
+    }
+
+    let des = (<HTMLInputElement>document.getElementById('des'));
+    let ren = (<HTMLInputElement>document.getElementById('ren'));
+    
+    // console.log('Mi opcion: ', des.value);
+    // console.log('Mi opcion check: ', des.checked );
+    // console.log('Mi opcion: ', ren.value);
+    // console.log('Mi opcion check: ', ren.checked );
+
+    let TempSueldo = (<HTMLInputElement>document.getElementById('sueldo')).value;
+    sueldo = parseFloat(TempSueldo)
+
+    // console.log('Suedo: ', sueldo);
+    
+    /**
+     * Calculo de aguinaldo
+     */
+    let AgTemp = sueldo / 12
+    if( TempY === 0 ){
+       console.log('Aguinaldo');
+       if( parseInt(monthF) < 12 ){
+        let diasT: number = AgTemp / 30
+        let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+        console.log('Mes numero: ', mesTemp);
+        console.log('If Aguinaldo menor a 12 meses', (AgTemp * mesTemp) + (parseInt(dayF) * diasT));
+        aguinaldo = (AgTemp * mesTemp) + (parseInt(dayF) * diasT)
+       }
+       else {
+           console.log('else aguinaldo no es menor a 6 meses', monthF);
+           if(parseInt(monthF) > 12){
+               if(parseInt(monthI) >= 12){
+                let diasT: number = AgTemp / 30
+                let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+                aguinaldo = (AgTemp * mesTemp) + (parseInt(dayF) * diasT)
+                console.log('if aguina: ', aguinaldo);
+               }
+               else{
+                let Mparcial: number = parseInt(monthF) - 7
+                console.log('If bono 14 mayor a 7: de julio en adelante', monthF);
+                let diasT: number = AgTemp / 30
+                aguinaldo = (AgTemp * Mparcial) + (parseInt(dayF) * diasT)
+                console.log('Bono 14: ', aguinaldo);
+               }
+           }
+           else{
+            console.log('Es igual a 6');
+            let diasT: number = AgTemp / 30
+            let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+            aguinaldo = (AgTemp * mesTemp) + (parseInt(dayF) * diasT)
+            console.log(aguinaldo);
+           }
+       }
+    }
+    else{
+
+        console.log('else aguinaldo despues de un ano');
+        let AgTemp = sueldo / 12
+        
+        
+    }
+
+    /**
+     * Calculo de Bono 14
+     * */
+    // let BonoTemp = sueldo / 12
+    // if( TempY === 0 ){
+    //    console.log('bono 14');
+    //    if( parseInt(monthF) < 6 ){
+    //     let diasT: number = BonoTemp / 30
+    //     let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+    //     console.log('Mes numero: ', mesTemp);
+    //     console.log('If bono 14 menor a 6 meses', (BonoTemp * mesTemp) + (parseInt(dayF) * diasT));
+    //     bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+    //    }
+    //    else {
+    //        console.log('else bono 14 no es menor a 6 meses', monthF);
+    //        if(parseInt(monthF) > 6){
+    //            if(parseInt(monthI) >= 7){
+    //             let diasT: number = BonoTemp / 30
+    //             let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+    //             bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+    //             console.log('if Bono 14: ', bono14);
+    //            }
+    //            else{
+    //             let Mparcial: number = parseInt(monthF) - 7
+    //             console.log('If bono 14 mayor a 7: de julio en adelante', monthF);
+    //             let diasT: number = BonoTemp / 30
+    //             bono14 = (BonoTemp * Mparcial) + (parseInt(dayF) * diasT)
+    //             console.log('Bono 14: ', bono14);
+    //            }
+    //        }
+    //        else{
+    //         console.log('Es igual a 6');
+    //         let diasT: number = BonoTemp / 30
+    //         let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+    //         bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+    //         console.log(bono14);
+    //        }
+    //    }
+    // }
+    // else{
+
+    //     console.log('else bono 14 despues de un ano');
+    //     let BonoTemp = sueldo / 12
+    //     console.log('Aguinaldo promedio: ', BonoTemp);
+    //     if( parseInt(monthF) < 7 ){
+    //         console.log('menor a 7');
+    //         if(parseInt(monthI) > parseInt(monthF) && TempY == 1){
+    //             console.log('Entro un no y se fue en otro y no lleva mas de 12 meses');
+    //             let mesesAI: number = 12 - parseInt(monthI)
+    //             let mesAS: number = parseInt(monthF)
+    //             let totalMeses: number = mesesAI + mesAS 
+    //             let diasT: number = BonoTemp / 30
+    //             console.log('Meses trabajados el ano de entrada: ', totalMeses); 
+    //             bono14 = (BonoTemp * totalMeses) + (parseInt(dayF) * diasT)
+    //         }
+    //         else {
+    //             console.log('Lleva mas de un a;o tragaando');
+    //             let diasT: number = BonoTemp / 30
+    //             let mesTemp: number = parseInt(monthF) + 5
+    //             bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+    //             console.log(bono14);
+    //         }
+    //     }
+    //     else {
+    //         console.log('else mayor a 7');
+    //         let Mparcial: number = parseInt(monthF) - 7
+    //         console.log('If bono 14 mayor a 7: de julio en adelante', monthF);
+    //         let diasT: number = BonoTemp / 30
+    //         bono14 = (BonoTemp * Mparcial) + (parseInt(dayF) * diasT)
+    //         console.log('Bono 14: ', bono14);
+    //     }
+        
+    // }
+    
+   
+    
+    /**
+     * Calculo de Vacaciones
+     */
+    if(parseInt(monthF) < parseInt(monthI)){
+        // console.log('Vacaciones');
+        let TempMonthV = 12 - parseInt(monthI)
+        TMonthV = parseInt(monthF) + TempMonthV
+        if(parseInt(dayF) > 25){
+            TMonthV += 1
+            vacaciones = (TMonthV * 30) * factorV
+        }
+        else{
+            vacaciones = (TMonthV * 30) * factorV
+        }
+    }
+    else{
+        // console.log('Vacacioes dos');
+        TMonthV = parseInt(monthF) - parseInt(monthI)
+        if( TMonthV === 0 ){
+            TMonthV = 12
+            let VDays = parseInt(dayF) * factorV
+            vacaciones = VDays
+        }
+        else {
+            if(parseInt(dayF) > 25){
+                TMonthV += 1    
+                // console.log('If dende else meses: ', TMonthV);
+                vacaciones = (TMonthV * 30) * factorV
+            }
+            vacaciones = (TMonthV * 30) * factorV
+        }
+        // console.log('Vac dos REs: ', TMonthV);
+    }
+    
+
+    vacaciones = Math.round(vacaciones)
+    
+    let PVacacions = (sueldo / 30) * vacaciones
+
+    let resultado = document.getElementById('resultado')
+    // Resultado visual
+    resultado.innerHTML = `
+    <p>Años trabajados: <span>${TYears}</span></p>
+    <p>Meses: <span>${TMonth}</span></p>
+    <p>Días: <span>${TDays}</span></p>
+    <p>Aguinaldo: <span>Q${aguinaldo}</span></p>
+    <p>Bono 14: <span>Q${bono14}</span></p>
+    <p>Vacaciones: <span>${vacaciones}</span></p>
+    <p>Vacaciones en dinero: <span>Q${PVacacions}</span></p>
+    
+    `;
+
+    // <p>Meses trabajados: <span>${ mesesT }</span></p>
+    // <p>Dias trabajados: <span>${ diaF }</span></p>
+    // <p>Sueldo: <span>${ sueldo }</span></p>
+    // <p>Aguinaldo: <span>${ aguinaldo }</span></p>
+    // <p>Bono 14: <span>${ bono14 }</span></p>
+    // <p>Indemnizacion: <span>${ totalIndem }</span></p>
+    
+}
+
+// console.log(diaI);
+
+function CalcYears(){
+
+}
+
+function CalculoAguinaldo(){
+
+}
+
+function CalculoBono(sueldo: number, year: number, monthF: number, monthI: number, dayF: number, dayI: number){
+    let TempY = year
+    let BonoTemp = sueldo / 12
+    if( TempY === 0 ){
+       console.log('bono 14');
+       if( parseInt(monthF) < 6 ){
+        let diasT: number = BonoTemp / 30
+        let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+        console.log('Mes numero: ', mesTemp);
+        console.log('If bono 14 menor a 6 meses', (BonoTemp * mesTemp) + (parseInt(dayF) * diasT));
+        bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+       }
+       else {
+           console.log('else bono 14 no es menor a 6 meses', monthF);
+           if(parseInt(monthF) > 6){
+               if(parseInt(monthI) >= 7){
+                let diasT: number = BonoTemp / 30
+                let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+                bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+                console.log('if Bono 14: ', bono14);
+               }
+               else{
+                let Mparcial: number = parseInt(monthF) - 7
+                console.log('If bono 14 mayor a 7: de julio en adelante', monthF);
+                let diasT: number = BonoTemp / 30
+                bono14 = (BonoTemp * Mparcial) + (parseInt(dayF) * diasT)
+                console.log('Bono 14: ', bono14);
+               }
+           }
+           else{
+            console.log('Es igual a 6');
+            let diasT: number = BonoTemp / 30
+            let mesTemp: number = parseInt(monthF) - parseInt(monthI)
+            bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+            console.log(bono14);
+           }
+       }
+    }
+    else{
+
+        console.log('else bono 14 despues de un ano');
+        let BonoTemp = sueldo / 12
+        console.log('Aguinaldo promedio: ', BonoTemp);
+        if( parseInt(monthF) < 7 ){
+            console.log('menor a 7');
+            if(parseInt(monthI) > parseInt(monthF) && TempY == 1){
+                console.log('Entro un no y se fue en otro y no lleva mas de 12 meses');
+                let mesesAI: number = 12 - parseInt(monthI)
+                let mesAS: number = parseInt(monthF)
+                let totalMeses: number = mesesAI + mesAS 
+                let diasT: number = BonoTemp / 30
+                console.log('Meses trabajados el ano de entrada: ', totalMeses); 
+                bono14 = (BonoTemp * totalMeses) + (parseInt(dayF) * diasT)
+            }
+            else {
+                console.log('Lleva mas de un a;o tragaando');
+                let diasT: number = BonoTemp / 30
+                let mesTemp: number = parseInt(monthF) + 5
+                bono14 = (BonoTemp * mesTemp) + (parseInt(dayF) * diasT)
+                console.log(bono14);
+            }
+        }
+        else {
+            console.log('else mayor a 7');
+            let Mparcial: number = parseInt(monthF) - 7
+            console.log('If bono 14 mayor a 7: de julio en adelante', monthF);
+            let diasT: number = BonoTemp / 30
+            bono14 = (BonoTemp * Mparcial) + (parseInt(dayF) * diasT)
+            console.log('Bono 14: ', bono14);
+        }
+        
+    }
+}
