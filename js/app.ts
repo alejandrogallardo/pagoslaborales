@@ -321,25 +321,9 @@ function getData(){
 
 
 
-    // ==============================================
-    //    Motivo de salida
-    // ==============================================
-    let des = (<HTMLInputElement>document.getElementById('des'))
-    let ren = (<HTMLInputElement>document.getElementById('ren'))
-    let VCP = (<HTMLInputElement>document.getElementById('vc')).value
     
-    if(ren.checked){
-        console.log('Renuncie');
-    }
-    else{
-        console.log('Me despidieton');
-
-    }
-    // console.log('Mi opcion: ', des.value);
-    // console.log('Mi opcion check: ', des.checked );
-    // console.log('Mi opcion: ', ren.value);
-    // console.log('Mi opcion check: ', ren.checked );
-    // console.log('Suedo: ', sueldo);
+    
+    let VCP = (<HTMLInputElement>document.getElementById('vc')).value
     console.log('Vacaciones Pending str: ', VCP);
     if( !VCP ){
         nVCP = 0
@@ -348,42 +332,53 @@ function getData(){
         nVCP = parseInt(VCP)
     }
     console.log('Vacaciones Pending Number: ', nVCP);
-   
-    
-
-    // ==============================================
-    // Muestra el Resultado final en pantalla
-    // ==============================================
-    let resultado = document.getElementById('resultado')
-
-    TotalYears = sueldo * TYears // Total 1 sueldo por año trabajado
-    let sueldoDia = sueldo / 30  // Costo día trabajado
-    let tVC = nVCP + vacaciones  // Total vacaciones pendientes mas acumuladas en curso
-    console.log('Total dias vas', tVC);
-    let diaVac: number
-    
-    if (TDays >= 25) {
-        TDays = 0
-    }
-    // Calculo si hay vacaciones Pendientes
-    if( nVCP == 0 ){
-        console.log('No hay vac pendientes');
-        diaVac = vacaciones * sueldoDia
-        totalIndem = TotalYears + bono14 + aguinaldo + diaVac
-        nVCP = 0
-    }
-    else{
-        console.log('Hay vac pendientes');
-        tVC = nVCP + vacaciones
-        diaVac = tVC * sueldoDia
-        totalIndem = TotalYears + bono14 + aguinaldo + diaVac
-    }
 
     const formatter = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'GTQ',
-        minimumFractionDigits: 1
+        minimumFractionDigits: 2
       })
+   
+    
+    // ==============================================
+    //    Motivo de salida
+    // ==============================================
+    let des = (<HTMLInputElement>document.getElementById('des'))
+    let ren = (<HTMLInputElement>document.getElementById('ren'))
+    
+    if(ren.checked){
+        console.log('Renuncie');
+        let resultado = document.getElementById('resultado')
+        let mesesTemp = sueldo / 12
+        let sueldoDia = sueldo / 30  // Costo día trabajado
+        let mesesPago = mesesTemp * TMonth
+        let diasPago = (mesesTemp / 30) * NdayF
+        console.log('Sueldo dia ', sueldoDia);
+        TotalYears = (sueldo * TYears) + diasPago + mesesPago// Total 1 sueldo por año trabajado
+        let tVC = nVCP + vacaciones  // Total vacaciones pendientes mas acumuladas en curso
+        
+        console.log('Mesea a pagar: ', mesesPago);
+        console.log('Dias Pago: ', diasPago);
+        console.log('Total dias vas', tVC);
+        let diaVac: number
+        
+        if (TDays >= 25) {
+            TDays = 0
+        }
+        // Calculo si hay vacaciones Pendientes
+        if( nVCP == 0 ){
+            console.log('No hay vac pendientes');
+            diaVac = vacaciones * sueldoDia
+            totalIndem = bono14 + aguinaldo + diaVac
+            console.log('Inv totalsldkkjflkajs : ', totalIndem);
+            nVCP = 0
+        }
+        else{
+            console.log('Hay vac pendientes');
+            tVC = nVCP + vacaciones
+            diaVac = tVC * sueldoDia
+            totalIndem = bono14 + aguinaldo + diaVac
+        }
 
     // Resultado visual en pantalla
     resultado.innerHTML = `
@@ -426,11 +421,11 @@ function getData(){
     </thead>
     <tbody>
     <tr>
-      <td>período en curso:</td>
+      <td>Periodo en curso:</td>
       <td>${ vacaciones }</td>
     </tr>
     <tr>
-      <td>pendientes de goce:</td>
+      <td>Pendientes de goce:</td>
       <td>${ nVCP }</td>
     </tr>
     <tr>
@@ -449,7 +444,149 @@ function getData(){
     </thead>
     <tbody>
     <tr>
-      <td>Sueldos por años:</td>
+      <td>Total por tiempo laborado:</td>
+      <td>No aplica en caso de renuncia</td>
+    </tr>
+    <tr>
+      <td>Bono 14:</td>
+      <td>${ formatter.format(bono14) }</td>
+    </tr>
+    <tr>
+      <td>Aguinaldo:</td>
+      <td>${ formatter.format(aguinaldo) }</td>
+    </tr>
+    <tr>
+      <td>Total por Vacaciones:</td>
+      <td>${ formatter.format(diaVac) }</td>
+    </tr>
+  </tbody>
+    </table>
+
+    </div>
+    <small>Total indemnizacion:</small>
+    <div class="border resetText">
+    <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Descripción</th>
+      <th scope="col">Suma Totales</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td class="totales">*Total Indemnización:</td>
+    <td class="totales">${ formatter.format(totalIndem) }</td>
+    </tr>
+  </tbody>
+    </table>
+
+    </div>
+    <small>*El cálculo es aproximado y puede haber otros factores que afecten el resultado final.</small>
+    `;
+
+    }
+    else{
+        console.log('Me despidieton');
+        // ==============================================
+    // Muestra el Resultado final en pantalla
+    // ==============================================
+    let resultado = document.getElementById('resultado')
+    let mesesTemp = sueldo / 12
+    let sueldoDia = sueldo / 30  // Costo día trabajado
+    let mesesPago = mesesTemp * TMonth
+    let diasPago = (mesesTemp / 30) * NdayF
+    console.log('Sueldo dia ', sueldoDia);
+    TotalYears = (sueldo * TYears) + diasPago + mesesPago// Total 1 sueldo por año trabajado
+    let tVC = nVCP + vacaciones  // Total vacaciones pendientes mas acumuladas en curso
+    
+    console.log('Mesea a pagar: ', mesesPago);
+    console.log('Dias Pago: ', diasPago);
+    console.log('Total dias vas', tVC);
+    let diaVac: number
+    
+    if (TDays >= 25) {
+        TDays = 0
+    }
+    // Calculo si hay vacaciones Pendientes
+    if( nVCP == 0 ){
+        console.log('No hay vac pendientes');
+        diaVac = vacaciones * sueldoDia
+        totalIndem = TotalYears + bono14 + aguinaldo + diaVac
+        console.log('Inv totalsldkkjflkajs : ', totalIndem);
+        nVCP = 0
+    }
+    else{
+        console.log('Hay vac pendientes');
+        tVC = nVCP + vacaciones
+        diaVac = tVC * sueldoDia
+        totalIndem = TotalYears + bono14 + aguinaldo + diaVac
+    }
+
+    // Resultado visual en pantalla
+    resultado.innerHTML = `
+    <small>Tiempo trabajado:</small>
+    <div class="border mb-2 resetText"> 
+
+    <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Descripción</th>
+      <th scope="col">Cantidad</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Años trabajados:</td>
+      <td>${TYears}</td>
+    </tr>
+    <tr>
+      <td>Meses:</td>
+      <td>${TMonth}</td>
+    </tr>
+    <tr>
+      <td>Días</td>
+      <td>${ TDays }</td>
+    </tr>
+  </tbody>
+    </table>
+    </div>
+
+    <small>Prestaciones Laborales:</small>
+    <div class="border mb-2 resetText">
+    <small>Días de vacaciones:</small>
+    <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Vacaciones</th>
+      <th scope="col">Días</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Periodo en curso:</td>
+      <td>${ vacaciones }</td>
+    </tr>
+    <tr>
+      <td>Pendientes de goce:</td>
+      <td>${ nVCP }</td>
+    </tr>
+    <tr>
+      <td>Total:</td>
+      <td>${ tVC }</td>
+    </tr>
+  </tbody>
+    </table>
+    
+    <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Descripción</th>
+      <th scope="col">Cantidad</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Total por tiempo laborado:</td>
       <td>${ formatter.format(TotalYears) }</td>
     </tr>
     <tr>
@@ -479,15 +616,19 @@ function getData(){
     </thead>
     <tbody>
     <tr>
-      <td>*Total Indemnización:</td>
-      <td><span class="badge badge-success">${ formatter.format(totalIndem) }</span></td>
+      <td class="totales">*Total Indemnización:</td>
+      <td class="totales">${ formatter.format(totalIndem) }</td>
     </tr>
   </tbody>
     </table>
 
     </div>
-    <small>*El calculo es aproximado y pueden haber otros factores que hagan que varie</small>
+    <small>*El cálculo es aproximado y puede haber otros factores que afecten el resultado final.</small>
     `;
+
+    }
+
+    
 
 }
 

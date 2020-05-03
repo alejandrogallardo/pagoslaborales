@@ -268,23 +268,7 @@ function getData() {
             vacaciones = Math.round(DiasVac);
         }
     }
-    // ==============================================
-    //    Motivo de salida
-    // ==============================================
-    var des = document.getElementById('des');
-    var ren = document.getElementById('ren');
     var VCP = document.getElementById('vc').value;
-    if (ren.checked) {
-        console.log('Renuncie');
-    }
-    else {
-        console.log('Me despidieton');
-    }
-    // console.log('Mi opcion: ', des.value);
-    // console.log('Mi opcion check: ', des.checked );
-    // console.log('Mi opcion: ', ren.value);
-    // console.log('Mi opcion check: ', ren.checked );
-    // console.log('Suedo: ', sueldo);
     console.log('Vacaciones Pending str: ', VCP);
     if (!VCP) {
         nVCP = 0;
@@ -293,36 +277,85 @@ function getData() {
         nVCP = parseInt(VCP);
     }
     console.log('Vacaciones Pending Number: ', nVCP);
-    // ==============================================
-    // Muestra el Resultado final en pantalla
-    // ==============================================
-    var resultado = document.getElementById('resultado');
-    TotalYears = sueldo * TYears; // Total 1 sueldo por año trabajado
-    var sueldoDia = sueldo / 30; // Costo día trabajado
-    var tVC = nVCP + vacaciones; // Total vacaciones pendientes mas acumuladas en curso
-    console.log('Total dias vas', tVC);
-    var diaVac;
-    if (TDays >= 25) {
-        TDays = 0;
-    }
-    // Calculo si hay vacaciones Pendientes
-    if (nVCP == 0) {
-        console.log('No hay vac pendientes');
-        diaVac = vacaciones * sueldoDia;
-        totalIndem = TotalYears + bono14 + aguinaldo + diaVac;
-        nVCP = 0;
-    }
-    else {
-        console.log('Hay vac pendientes');
-        tVC = nVCP + vacaciones;
-        diaVac = tVC * sueldoDia;
-        totalIndem = TotalYears + bono14 + aguinaldo + diaVac;
-    }
     var formatter = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'GTQ',
-        minimumFractionDigits: 1
+        minimumFractionDigits: 2
     });
-    // Resultado visual en pantalla
-    resultado.innerHTML = "\n    <small>Tiempo trabajado:</small>\n    <div class=\"border mb-2 resetText\"> \n\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>A\u00F1os trabajados:</td>\n      <td>" + TYears + "</td>\n    </tr>\n    <tr>\n      <td>Meses:</td>\n      <td>" + TMonth + "</td>\n    </tr>\n    <tr>\n      <td>D\u00EDas</td>\n      <td>" + TDays + "</td>\n    </tr>\n  </tbody>\n    </table>\n    </div>\n\n    <small>Prestaciones Laborales:</small>\n    <div class=\"border mb-2 resetText\">\n    <small>D\u00EDas de vacaciones:</small>\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Vacaciones</th>\n      <th scope=\"col\">D\u00EDas</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>per\u00EDodo en curso:</td>\n      <td>" + vacaciones + "</td>\n    </tr>\n    <tr>\n      <td>pendientes de goce:</td>\n      <td>" + nVCP + "</td>\n    </tr>\n    <tr>\n      <td>Total:</td>\n      <td>" + tVC + "</td>\n    </tr>\n  </tbody>\n    </table>\n    \n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>Sueldos por a\u00F1os:</td>\n      <td>" + formatter.format(TotalYears) + "</td>\n    </tr>\n    <tr>\n      <td>Bono 14:</td>\n      <td>" + formatter.format(bono14) + "</td>\n    </tr>\n    <tr>\n      <td>Aguinaldo:</td>\n      <td>" + formatter.format(aguinaldo) + "</td>\n    </tr>\n    <tr>\n      <td>Total por Vacaciones:</td>\n      <td>" + formatter.format(diaVac) + "</td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>Total indemnizacion:</small>\n    <div class=\"border resetText\">\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Suma Totales</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>*Total Indemnizaci\u00F3n:</td>\n      <td><span class=\"badge badge-success\">" + formatter.format(totalIndem) + "</span></td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>*El calculo es aproximado y pueden haber otros factores que hagan que varie</small>\n    ";
+    // ==============================================
+    //    Motivo de salida
+    // ==============================================
+    var des = document.getElementById('des');
+    var ren = document.getElementById('ren');
+    if (ren.checked) {
+        console.log('Renuncie');
+        var resultado = document.getElementById('resultado');
+        var mesesTemp = sueldo / 12;
+        var sueldoDia = sueldo / 30; // Costo día trabajado
+        var mesesPago = mesesTemp * TMonth;
+        var diasPago = (mesesTemp / 30) * NdayF;
+        console.log('Sueldo dia ', sueldoDia);
+        TotalYears = (sueldo * TYears) + diasPago + mesesPago; // Total 1 sueldo por año trabajado
+        var tVC = nVCP + vacaciones; // Total vacaciones pendientes mas acumuladas en curso
+        console.log('Mesea a pagar: ', mesesPago);
+        console.log('Dias Pago: ', diasPago);
+        console.log('Total dias vas', tVC);
+        var diaVac = void 0;
+        if (TDays >= 25) {
+            TDays = 0;
+        }
+        // Calculo si hay vacaciones Pendientes
+        if (nVCP == 0) {
+            console.log('No hay vac pendientes');
+            diaVac = vacaciones * sueldoDia;
+            totalIndem = bono14 + aguinaldo + diaVac;
+            console.log('Inv totalsldkkjflkajs : ', totalIndem);
+            nVCP = 0;
+        }
+        else {
+            console.log('Hay vac pendientes');
+            tVC = nVCP + vacaciones;
+            diaVac = tVC * sueldoDia;
+            totalIndem = bono14 + aguinaldo + diaVac;
+        }
+        // Resultado visual en pantalla
+        resultado.innerHTML = "\n    <small>Tiempo trabajado:</small>\n    <div class=\"border mb-2 resetText\"> \n\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>A\u00F1os trabajados:</td>\n      <td>" + TYears + "</td>\n    </tr>\n    <tr>\n      <td>Meses:</td>\n      <td>" + TMonth + "</td>\n    </tr>\n    <tr>\n      <td>D\u00EDas</td>\n      <td>" + TDays + "</td>\n    </tr>\n  </tbody>\n    </table>\n    </div>\n\n    <small>Prestaciones Laborales:</small>\n    <div class=\"border mb-2 resetText\">\n    <small>D\u00EDas de vacaciones:</small>\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Vacaciones</th>\n      <th scope=\"col\">D\u00EDas</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>Periodo en curso:</td>\n      <td>" + vacaciones + "</td>\n    </tr>\n    <tr>\n      <td>Pendientes de goce:</td>\n      <td>" + nVCP + "</td>\n    </tr>\n    <tr>\n      <td>Total:</td>\n      <td>" + tVC + "</td>\n    </tr>\n  </tbody>\n    </table>\n    \n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>Total por tiempo laborado:</td>\n      <td>No aplica en caso de renuncia</td>\n    </tr>\n    <tr>\n      <td>Bono 14:</td>\n      <td>" + formatter.format(bono14) + "</td>\n    </tr>\n    <tr>\n      <td>Aguinaldo:</td>\n      <td>" + formatter.format(aguinaldo) + "</td>\n    </tr>\n    <tr>\n      <td>Total por Vacaciones:</td>\n      <td>" + formatter.format(diaVac) + "</td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>Total indemnizacion:</small>\n    <div class=\"border resetText\">\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Suma Totales</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n    <td class=\"totales\">*Total Indemnizaci\u00F3n:</td>\n    <td class=\"totales\">" + formatter.format(totalIndem) + "</td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>*El c\u00E1lculo es aproximado y puede haber otros factores que afecten el resultado final.</small>\n    ";
+    }
+    else {
+        console.log('Me despidieton');
+        // ==============================================
+        // Muestra el Resultado final en pantalla
+        // ==============================================
+        var resultado = document.getElementById('resultado');
+        var mesesTemp = sueldo / 12;
+        var sueldoDia = sueldo / 30; // Costo día trabajado
+        var mesesPago = mesesTemp * TMonth;
+        var diasPago = (mesesTemp / 30) * NdayF;
+        console.log('Sueldo dia ', sueldoDia);
+        TotalYears = (sueldo * TYears) + diasPago + mesesPago; // Total 1 sueldo por año trabajado
+        var tVC = nVCP + vacaciones; // Total vacaciones pendientes mas acumuladas en curso
+        console.log('Mesea a pagar: ', mesesPago);
+        console.log('Dias Pago: ', diasPago);
+        console.log('Total dias vas', tVC);
+        var diaVac = void 0;
+        if (TDays >= 25) {
+            TDays = 0;
+        }
+        // Calculo si hay vacaciones Pendientes
+        if (nVCP == 0) {
+            console.log('No hay vac pendientes');
+            diaVac = vacaciones * sueldoDia;
+            totalIndem = TotalYears + bono14 + aguinaldo + diaVac;
+            console.log('Inv totalsldkkjflkajs : ', totalIndem);
+            nVCP = 0;
+        }
+        else {
+            console.log('Hay vac pendientes');
+            tVC = nVCP + vacaciones;
+            diaVac = tVC * sueldoDia;
+            totalIndem = TotalYears + bono14 + aguinaldo + diaVac;
+        }
+        // Resultado visual en pantalla
+        resultado.innerHTML = "\n    <small>Tiempo trabajado:</small>\n    <div class=\"border mb-2 resetText\"> \n\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>A\u00F1os trabajados:</td>\n      <td>" + TYears + "</td>\n    </tr>\n    <tr>\n      <td>Meses:</td>\n      <td>" + TMonth + "</td>\n    </tr>\n    <tr>\n      <td>D\u00EDas</td>\n      <td>" + TDays + "</td>\n    </tr>\n  </tbody>\n    </table>\n    </div>\n\n    <small>Prestaciones Laborales:</small>\n    <div class=\"border mb-2 resetText\">\n    <small>D\u00EDas de vacaciones:</small>\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Vacaciones</th>\n      <th scope=\"col\">D\u00EDas</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>Periodo en curso:</td>\n      <td>" + vacaciones + "</td>\n    </tr>\n    <tr>\n      <td>Pendientes de goce:</td>\n      <td>" + nVCP + "</td>\n    </tr>\n    <tr>\n      <td>Total:</td>\n      <td>" + tVC + "</td>\n    </tr>\n  </tbody>\n    </table>\n    \n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Cantidad</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td>Total por tiempo laborado:</td>\n      <td>" + formatter.format(TotalYears) + "</td>\n    </tr>\n    <tr>\n      <td>Bono 14:</td>\n      <td>" + formatter.format(bono14) + "</td>\n    </tr>\n    <tr>\n      <td>Aguinaldo:</td>\n      <td>" + formatter.format(aguinaldo) + "</td>\n    </tr>\n    <tr>\n      <td>Total por Vacaciones:</td>\n      <td>" + formatter.format(diaVac) + "</td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>Total indemnizacion:</small>\n    <div class=\"border resetText\">\n    <table class=\"table\">\n    <thead>\n    <tr>\n      <th scope=\"col\">Descripci\u00F3n</th>\n      <th scope=\"col\">Suma Totales</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr>\n      <td class=\"totales\">*Total Indemnizaci\u00F3n:</td>\n      <td class=\"totales\">" + formatter.format(totalIndem) + "</td>\n    </tr>\n  </tbody>\n    </table>\n\n    </div>\n    <small>*El c\u00E1lculo es aproximado y puede haber otros factores que afecten el resultado final.</small>\n    ";
+    }
 }
