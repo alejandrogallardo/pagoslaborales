@@ -426,3 +426,14 @@ function CalculoBono(sueldo: number, year: number, monthF: number, monthI: numbe
         
     }
 }
+
+
+//Imagen PDF
+$('#downloadPDF').click(function () {
+     domtoimage.toPng(document.getElementById('exampleModal'))
+       .then(function (blob) {
+           var pdf = new jsPDF('l', 'pt', [$('#exampleModal').width(), $('#exampleModal').height()]);
+           pdf.addImage(blob, 'PNG', 0, 0, $('#exampleModal').width(), $('#exampleModal').height());
+           pdf.save("test.pdf");
+       });
+ });

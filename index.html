@@ -139,29 +139,44 @@
             </div>
           </div>
           <div class="modal-footer">
+            <div id="elementH"></div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <!-- <button class="btn btn-info" id="downloadPDF" disabled>Descargar PDF</button> -->
+            <button class="btn btn-info" id="downloadPDF" onclick="generatePDF()">Descargar PDF</button>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"
-    integrity="sha256-c9vxcXyAG4paArQG3xk6DjyW/9aHxai2ef9RpMWO44A=" crossorigin="anonymous"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.min.js"></script> -->
     <script src="js/app.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
-$('#downloadPDF').click(function () {
-     domtoimage.toPng(document.getElementById('exampleModal'))
-       .then(function (blob) {
-           var pdf = new jsPDF('l', 'pt', [$('#exampleModal').width(), $('#exampleModal').height()]);
-           pdf.addImage(blob, 'PNG', 0, 0, $('#exampleModal').width(), $('#exampleModal').height());
-           pdf.save("test.pdf");
-       });
- });
+  function generatePDF(){
+
+    var doc = new jsPDF();
+    doc.setFontSize(8);
+    var miModal = $('#resultado').html();
+
+    var specialElementHandler = {
+      '#elementH': function(element, renderer){
+        return true
+      }
+    };
+    
+    
+    
+    doc.fromHTML(miModal,15,15, {
+      'width': 100,
+      'elementHandlers': specialElementHandler
+    });
+    doc.save('documento.pdf');
+  }
 </script>
+<!-- doc.save('documento.pdf'); -->
 </body>
 </html>
