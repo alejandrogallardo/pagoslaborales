@@ -327,10 +327,16 @@ function getData() {
         // Muestra el Resultado final en pantalla
         // ==============================================
         var resultado = document.getElementById('resultado');
+        var diasPago = void 0;
         var mesesTemp = sueldo / 12;
         var sueldoDia = sueldo / 30; // Costo día trabajado
         var mesesPago = mesesTemp * TMonth;
-        var diasPago = (mesesTemp / 30) * NdayF;
+        if (NdayF > 25) {
+            diasPago = 0;
+        }
+        else {
+            diasPago = (mesesTemp / 30) * NdayF;
+        }
         console.log('Sueldo dia ', sueldoDia);
         TotalYears = (sueldo * TYears) + diasPago + mesesPago; // Total 1 sueldo por año trabajado
         var tVC = nVCP + vacaciones; // Total vacaciones pendientes mas acumuladas en curso

@@ -491,10 +491,15 @@ function getData(){
     // Muestra el Resultado final en pantalla
     // ==============================================
     let resultado = document.getElementById('resultado')
+    let diasPago: number
     let mesesTemp = sueldo / 12
     let sueldoDia = sueldo / 30  // Costo día trabajado
     let mesesPago = mesesTemp * TMonth
-    let diasPago = (mesesTemp / 30) * NdayF
+    if ( NdayF > 25 ){
+      diasPago = 0
+    }else {
+      diasPago = (mesesTemp / 30) * NdayF
+    }
     console.log('Sueldo dia ', sueldoDia);
     TotalYears = (sueldo * TYears) + diasPago + mesesPago// Total 1 sueldo por año trabajado
     let tVC = nVCP + vacaciones  // Total vacaciones pendientes mas acumuladas en curso
